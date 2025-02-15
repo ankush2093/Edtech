@@ -6,10 +6,13 @@ import {
   Param,
   Delete,
   Put,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service'; // Correct Import for UserService
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PaginationDto } from 'src/shared/dto/pagination.dto';
+
 
 @Controller('/')
 export class UserController {
@@ -25,9 +28,9 @@ export class UserController {
   }
 
   @Get('users')
-  async findAllUsers() {
+  async findAllUsers(@Query() paginationDto: PaginationDto) {
     try {
-      return await this.userService.findAllUsers();
+      return await this.userService.findAllUsers(paginationDto);
     } catch (error) {
       throw error;
     }

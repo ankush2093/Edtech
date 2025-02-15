@@ -7,17 +7,17 @@ export class CreateAuthDto {
   @IsNotEmpty()
   UserName: string;
   
-  @ApiProperty({ example: 'user@example.com', description: 'User email address' })
+  @ApiProperty()
   @IsEmail()
   @IsNotEmpty()
   EmailId: string;
 
-  @ApiProperty({ example: 'SecurePass@123', description: 'User password (hashed in backend)' })
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   Password: string;
 
-  @ApiProperty({ example: '+919876543210', description: 'User mobile number', required: false })
+  @ApiProperty()
   @IsString()
   @IsOptional()
   MobileNo?: string;

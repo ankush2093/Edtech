@@ -33,8 +33,4 @@ export class UpdateUserprogressDto {
   @Type(() => Date)
   CompletedAt?: Date;
 
-  @ApiProperty({ description: 'Indicates if the progress is active' })
-  @IsOptional()
-  @IsBoolean()
-  IsActive?: boolean;
 }

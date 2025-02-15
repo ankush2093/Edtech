@@ -1,14 +1,7 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Delete,
-  Put,
-} from '@nestjs/common';
+import {Controller,Get,Post,Body,Param,Delete,Put,Query,} from '@nestjs/common';
 import { CourseService } from './course.service';
 import { CreateCourseDto, UpdateCourseDto } from './dto';
+import { PaginationDto } from 'src/shared/dto/pagination.dto';
 
 @Controller('/')
 export class CourseController {
@@ -24,9 +17,9 @@ export class CourseController {
   }
 
   @Get('courses')
-  async findAllCourses() {
+  async findAllCourses(@Query() paginationDto: PaginationDto) {
     try {
-      return await this._courseService.findAllCourses();
+      return await this._courseService.findAllCourses(paginationDto);
     } catch (error) {
       throw error;
     }

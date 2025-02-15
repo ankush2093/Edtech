@@ -23,14 +23,22 @@ export class UserprogressService {
 
   public async findAllUserProgress() {
     try {
-      const userprogress = await this._userProgressModel.findAll();
-      const response = {
-        message: userprogress ? 'List of userprogress fetched successfully.' : 'UserProgress not found',
+      const { count: total, rows: userprogress } = await this._userProgressModel.findAndCountAll();
+      if (!userprogress || userprogress.length === 0) {
+        return {
+          message: 'No user progress records found.',
+          data: []
+        };
+      }
+
+      return {
+        message: 'List of user progress fetched successfully.',
         data: {
+          total,
           userprogress,
+          
         }
       };
-      return response;
     } catch (error) {
       throw error;
     }
@@ -39,11 +47,13 @@ export class UserprogressService {
   public async findUserProgressById(UserProgressId: number) {
     try {
       const userprogress = await this._userProgressModel.findByPk(UserProgressId);
-      const response = {
-        message: userprogress ? 'UserProgress fetched successfully.' : 'UserProgress not found',
-        data: userprogress
+      if (!userprogress || !userprogress.IsActive) {
+        throw new NotFoundException(`UserProgress not found by UserProgressId ${UserProgressId}`)
       }
-      return response;
+      return {
+        message: `User Progress fetch sucessfully UserProgress Id ${UserProgressId}`,
+        data: userprogress,
+      };
     }
     catch (error) {
       throw error;

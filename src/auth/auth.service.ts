@@ -11,7 +11,7 @@ export class AuthService {
   constructor(
     @InjectModel(User) private userModel: typeof User, // Inject User model
     private jwtService: JwtService, // Inject JwtService
-  ) {}
+  ) { }
 
   // Register User
   async registerUser(createAuthDto: CreateAuthDto) {
@@ -40,38 +40,43 @@ export class AuthService {
   }
 
 
-// Login User
-async loginUser(loginAuthDto: LoginAuthDto) {
-  const user = await this.userModel.findOne({
-    where: { EmailId: loginAuthDto.EmailId },
-  });
+  // Login User
+  async loginUser(loginAuthDto: LoginAuthDto) {
+    const user = await this.userModel.findOne({
+      where: { EmailId: loginAuthDto.EmailId },
+      attributes: { exclude: ['CreatedAt', 'UpdatedAt',] },
+    });
 
-  if (!user || !user.IsActive) {
-    throw new NotFoundException('User not found');
-  }
-  // if (!user.IsActive) {
-  //   throw new UnauthorizedException('User is inactive. Please contact support.');
-  // }
-  const isPasswordValid = await bcrypt.compare(
-    loginAuthDto.Password,
-    user.Password,
-  );
-
-  if (!isPasswordValid) {
-    throw new UnauthorizedException('Invalid Password');
-  }
-
-  const payload = { email: user.EmailId, sub: user.UserId };
-  const accessToken = this.jwtService.sign(payload); 
-
-  return {
-    message: 'User logged in successfully',
-    data: {
-      access_token: accessToken,
-      user:user
+    if (!user || !user.IsActive) {
+      throw new NotFoundException('User not found');
     }
-  };
-}
-}
+    // if (!user.IsActive) {
+    //   throw new UnauthorizedException('User is inactive. Please contact support.');
+    // }
+    const isPasswordValid = await bcrypt.compare(
+      loginAuthDto.Password,
+      user.Password,
+    );
 
-// course create validation user
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid Password');
+    }
+
+    const payload = { email: user.EmailId, sub: user.UserId };
+    const accessToken = this.jwtService.sign(payload);
+
+    // Remove password from user object
+    // const userWithoutPassword = {...user.get(), Password: undefined};
+    const userWithoutPassword = user.toJSON();
+    delete userWithoutPassword.Password;
+    delete userWithoutPassword.IsActive;
+    return {
+      message: 'User logged in successfully',
+      data: {
+        access_token: accessToken,
+        user: userWithoutPassword,
+      }
+    };
+  }
+
+}
