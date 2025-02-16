@@ -10,7 +10,7 @@ import {
      AllowNull
    } from 'sequelize-typescript';
    
-   @Table({ tableName: 'users', timestamps: true })
+   @Table({ tableName: 'Users', timestamps: true })
    export class User extends Model<User> {
      @PrimaryKey
      @AutoIncrement
@@ -41,6 +41,7 @@ import {
      @Column({
        type: DataType.STRING,
        allowNull: true,
+       unique: true,
      })
      MobileNo: string;
    

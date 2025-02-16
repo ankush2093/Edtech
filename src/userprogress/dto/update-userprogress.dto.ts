@@ -7,19 +7,19 @@ export class UpdateUserprogressDto {
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  UserID?: number;
+  UserId?: number;
 
   @ApiProperty({ description: 'ID of the course' })
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  CourseID?: number;
+  CourseId?: number;
 
   @ApiProperty({ description: 'ID of the lesson' })
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  LessonID?: number;
+  LessonId?: number;
 
   @ApiProperty({ description: 'Score of the user' })
   @IsOptional()

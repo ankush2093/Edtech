@@ -18,19 +18,19 @@ import {
     @PrimaryKey
     @AutoIncrement
     @Column({ type: DataType.INTEGER })
-    ProgressID: number;
+    ProgressId: number;
   
     @ForeignKey(() => User)
     @Column({ type: DataType.INTEGER })
-    UserID: number;
+    UserId: number;
   
     @ForeignKey(() => Course)
     @Column({ type: DataType.INTEGER })
-    CourseID: number;
+    CourseId: number;
   
     @ForeignKey(() => Lesson)
     @Column({ type: DataType.INTEGER })
-    LessonID: number;
+    LessonId: number;
   
     @Column({ type: DataType.FLOAT })
     Score: number;

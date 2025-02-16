@@ -2,20 +2,46 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserprogressDto, UpdateUserprogressDto } from './dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { UserProgress } from 'src/shared/models/userprogress.model';
+import { Course } from 'src/shared/models/course.model';
+import { Lesson } from 'src/shared/models/lesson.model';
+import { User } from 'src/shared/models';
 
 @Injectable()
 export class UserprogressService {
-  constructor(@InjectModel(UserProgress) private _userProgressModel: typeof UserProgress) { }
-
+  constructor(@InjectModel(UserProgress) private _userProgressModel: typeof UserProgress,
+    @InjectModel(Course) private _courseModel: typeof Course,
+    @InjectModel(Lesson) private _lessonModel: typeof Lesson,
+    @InjectModel(User) private _userModel: typeof User) { }
 
   public async createUserProgress(createUserprogressDto: CreateUserprogressDto) {
     try {
-      const userprogress = await this._userProgressModel.create(createUserprogressDto);
-      const response = {
+      const { UserId, CourseId, LessonId } = createUserprogressDto;
+
+      // Check if the user exists and is active
+      const user = await this._userModel.findOne({ where: { UserId: UserId, IsActive: true } });
+      if (!user) {
+        return { message: 'User not found or inactive', success: false };
+      }
+
+      // Check if the course exists and is active
+      const course = await this._courseModel.findOne({ where: { CourseId: CourseId, IsActive: true } });
+      if (!course) {
+        return { message: 'Course not found or inactive', success: false };
+      }
+
+      // Check if the lesson exists and is active
+      const lesson = await this._lessonModel.findOne({ where: { LessonId: LessonId, IsActive: true } });
+      if (!lesson) {
+        return { message: 'Lesson not found or inactive', success: false };
+      }
+
+      // Create user progress
+      const userProgress = await this._userProgressModel.create(createUserprogressDto);
+      return {
         message: 'User Progress created successfully',
-        data: userprogress,
+        success: true,
+        data: userProgress,
       };
-      return response;
     } catch (error) {
       throw error;
     }
@@ -36,7 +62,7 @@ export class UserprogressService {
         data: {
           total,
           userprogress,
-          
+
         }
       };
     } catch (error) {

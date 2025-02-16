@@ -7,19 +7,19 @@ export class CreateUserprogressDto{
   @IsNotEmpty()
   @IsNumber()
   @Type(() => Number)
-  UserID: number;
+  UserId: number;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
   @Type(() => Number)
-  CourseID: number;
+  CourseId: number;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
   @Type(() => Number)
-  LessonID: number;
+  LessonId: number;
 
   @ApiProperty()
   @IsOptional()
