@@ -85,7 +85,7 @@ export class AuthService {
     return {
       message: 'User logged in successfully',
       data: {
-        access_token: accessToken,
+        'access-token': accessToken,
         user: userWithoutPassword,
       }
     };

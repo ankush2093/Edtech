@@ -49,11 +49,14 @@ export class UserService {
     }
   }
 
-
+ 
 
   public async findUserById(UserId: number) {
     try {
-      const user = await this._userModel.findOne({ where: { UserId: UserId } });
+      const user = await this._userModel.findOne({ 
+        where: { UserId: UserId },
+        attributes: { exclude: ['Password'] },
+      });
       return {
         message: user ? 'User fetched successfully.' : 'User not found',
         data: user,

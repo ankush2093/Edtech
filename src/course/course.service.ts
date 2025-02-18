@@ -31,18 +31,22 @@ export class CourseService {
         limit: Pagination ? limit : undefined,  // Apply limit only if pagination is enabled
         offset: Pagination ? offset : undefined // Apply offset only if pagination is enabled
       });
+
       const totalPages = Pagination ? Math.ceil(total / Limit) : 1;
 
       const response = {
-        message: courses.length > 0 ? 'List of courses fetched successfully.' : 'Course not found',
+        message: courses.length > 0 
+        ? 'List of courses fetched successfully.'
+         : 'Course not found',
         data: {
           total,
           totalPages,
           currentPage: Page,
           perPage: Limit,
-          courses
+          courses,
         }
       };
+      return response;
     } catch (error) {
       throw error;
     }

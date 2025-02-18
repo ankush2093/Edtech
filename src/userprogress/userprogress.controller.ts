@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Query } from '@nestjs/common';
 import { UserprogressService } from './userprogress.service';
 import { CreateUserprogressDto, UpdateUserprogressDto } from './dto';
+import { PaginationDto } from 'src/shared/dto/pagination.dto';
 
 @Controller()
 export class UserprogressController {
@@ -17,9 +18,9 @@ export class UserprogressController {
   }
 
   @Get('/usersprogress')
-  async findAllUserProgress() {
+  async findAllUserProgress(@Query() paginationDto:PaginationDto) {
     try {
-      const userprogress = await this._userprogressService.findAllUserProgress();
+      const userprogress = await this._userprogressService.findAllUserProgress(paginationDto);
       return userprogress;
     } catch (error) {
       throw error;

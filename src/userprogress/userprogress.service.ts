@@ -5,6 +5,7 @@ import { UserProgress } from 'src/shared/models/userprogress.model';
 import { Course } from 'src/shared/models/course.model';
 import { Lesson } from 'src/shared/models/lesson.model';
 import { User } from 'src/shared/models';
+import { PaginationDto } from 'src/shared/dto/pagination.dto';
 
 @Injectable()
 export class UserprogressService {
@@ -47,29 +48,37 @@ export class UserprogressService {
     }
   }
 
-  public async findAllUserProgress() {
+  public async findAllUserProgress(paginationDto: PaginationDto) {
     try {
-      const { count: total, rows: userprogress } = await this._userProgressModel.findAndCountAll();
-      if (!userprogress || userprogress.length === 0) {
-        return {
-          message: 'No user progress records found.',
-          data: []
-        };
-      }
+      const { Page = 1, Limit = 10, Pagination = true } = paginationDto;
+      const offset = (Page - 1) * Limit;
+      const limit = Limit;
 
-      return {
-        message: 'List of user progress fetched successfully.',
+      const { count: total, rows: userProgress } = await this._userProgressModel.findAndCountAll({
+        limit: Pagination ? Limit : undefined,   // Apply limit only if pagination is enabled
+        offset: Pagination ? offset : undefined,   // Apply offset only if pagination is enabled
+      });
+
+      const totalPages = Pagination ? Math.ceil(total / Limit) : 1;
+    
+      const response = {
+        message: userProgress.length > 0
+          ? 'List of user progress fetched successfully.'
+          : 'User Progress not found',
         data: {
           total,
-          userprogress,
-
-        }
+          totalPages,
+          currentPage: Page,
+          perPage: Limit,
+          userProgress,
+        },
       };
+      return response;
     } catch (error) {
       throw error;
     }
   }
-
+  
   public async findUserProgressById(UserProgressId: number) {
     try {
       const userprogress = await this._userProgressModel.findByPk(UserProgressId);

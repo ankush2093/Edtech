@@ -1,20 +1,14 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Delete,
-  Put,
-  Query,
-} from '@nestjs/common';
+import {Controller,Get,Post,Body,Param,Delete,Put,Query,UseGuards,} from '@nestjs/common';
 import { UserService } from './user.service'; // Correct Import for UserService
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from 'src/shared/dto/pagination.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 
 @Controller('/')
+@ApiBearerAuth('Bearer access-token')
 export class UserController {
   constructor(private readonly userService: UserService) { } // Inject UserService
 
@@ -35,7 +29,7 @@ export class UserController {
       throw error;
     }
   }
-
+  @UseGuards(JwtAuthGuard)
   @Get('user/:UserId')
   async findUserById(@Param('UserId') UserId: number) {
     try {

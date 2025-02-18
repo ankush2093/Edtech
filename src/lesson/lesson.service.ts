@@ -44,7 +44,9 @@ export class LessonService {
       const totalPages = Pagination ? Math.ceil(total / Limit) : 1;
 
       const response = {
-        message: lessons ? 'List of lessons fetched successfully.' : 'Lesson not found',
+        message: lessons.length > 0
+        ? 'List of lessons fetched successfully.' 
+        : 'Lesson not found',
         data: {
           total,
           totalPages,
