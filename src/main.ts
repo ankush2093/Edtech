@@ -2,8 +2,7 @@ import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { AllExceptionsFilter } from './shared/filters/all-exceptions.filter';
-import * as dotenv from 'dotenv';
-dotenv.config();
+
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -15,7 +14,7 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
 
   app.enableCors({
-    origin: ['http://localhost:3500/swagger#/','https://nodejs-production-5562.up.railway.app', ],// Replace with your Swagger UI origin
+    origin: 'http://localhost:3500/swagger#/', // Replace with your Swagger UI origin
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
@@ -23,11 +22,9 @@ async function bootstrap() {
 
 
   await configureSwagger(app);
-  const PORT = process.env.PORT || 3000;
-  await app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Server running on port ${PORT}`);
+  await app.listen(3500, () => {
+    console.log('🚀 server run on port 3500');
   });
-  
 }
 
 if (process.env.NODE_ENV == 'dev') {
